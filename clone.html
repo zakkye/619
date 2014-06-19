@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+</head>
+
+<body>
+<script>
+var x = {
+		a : [1,2,3,4],
+		o : {
+			a : 1,
+			b : 2
+		}
+	}
+
+function is(_obj,_type) {
+	var toString = Object.prototype.toString,
+		undefined;
+	_type = _type.charAt(0).toUpperCase() + _type.substr(1);	
+	return _type === 'Null' && _obj === null || 
+		_type === 'Undefined' && _obj === undefined ||
+		toString.call(_obj).slice(8,-1) === _type;
+}
+function clone(result,sourse) {
+	var callee = arguments.callee;
+	for (var key in sourse) {
+		var copy = sourse[key];
+		if (copy === sourse) continue;
+		if (is(copy,'object')) {
+			result[key] = callee(result[key] || {},copy);
+		} else if (is(copy,'array')) {
+			result[key] = callee(result[key] || [],copy);
+		} else {
+			result[key] = copy;
+		}
+	}
+	return result;
+}
+var nX = clone({},x);
+nX.o.a = 100;
+/*console.log(x)
+console.log(nX)*/
+</script>
+</body>
+</html>
