@@ -1,0 +1,69 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+</head>
+
+<body>
+<script>
+var obj = {
+    value: 10
+};
+/*function test(a,b,c) {
+	console.log(a)
+	console.log(b)
+	console.log(c)
+}
+function abc() {
+	test.apply(obj,[].slice.apply(arguments));
+}
+abc(1,2,3,4);*/
+
+/*var queue = function(funcs, scope) {
+	(function next() {
+		funcs.length && funcs.shift().apply(scope || {}, [next].concat([].slice.apply(arguments)));
+	})();
+};*/
+
+
+
+var queue = function(funcs, scope) {
+	scope = scope || {};
+	(function next() {
+		funcs.length && funcs.shift().apply(scope, [next].concat([].slice.call(arguments)));
+	})();
+};
+
+queue([
+    function(callback) {
+        var self = this;
+        setTimeout(function() {
+            self.value = 10;
+            callback(20);
+        }, 1000);
+    },
+    function(callback, add) {
+        console.log(this.value + add);
+        callback();
+    },
+    function(callback) {
+        console.log(this.value);
+		callback();
+    },
+	function() {
+		console.log('end');
+	}
+], obj);
+
+/*function a(){}
+function b() {};
+function test() {
+	var s = [a].concat([].slice.call(arguments))
+	console.log(s);
+}
+test(b)*/
+
+</script>
+</body>
+</html>
